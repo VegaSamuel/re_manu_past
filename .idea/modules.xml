@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/re_manu_past.iml" filepath="$PROJECT_DIR$/re_manu_past.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/re_manu_past_android.iml" filepath="$PROJECT_DIR$/android/re_manu_past_android.iml" />
     </modules>
   </component>
 </project>

@@ -15,7 +15,5 @@ class MWeek {
   double pago = 0.0;
   bool isPagado = false;
 
-
-
   void pagar() { isPagado = true; }
 }
