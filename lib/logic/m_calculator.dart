@@ -17,7 +17,7 @@ class MCalculator {
     w.base = w.diezOfre - w.fondSegSoc;
     w.preDiez = (w.base * w.porc) + (w.diezOfre * 0.25);
     w.diezPast = w.preDiez * 0.1;
-    w.manuPast = w.preDiez;
+    w.manuPast = w.preDiez - w.diezPast;
 
     return w;
   }

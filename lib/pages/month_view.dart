@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:re_manu_past/models/m_week.dart';
+import 'package:re_manu_past/pages/week_view.dart';
 import 'package:re_manu_past/persistance/p_m_week.dart';
 
 class MonthView extends StatelessWidget {
@@ -9,6 +10,10 @@ class MonthView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -16,7 +21,7 @@ class MonthView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                '',
+                'FEBRERO 2026',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -48,44 +53,37 @@ class MonthView extends StatelessWidget {
                     }
 
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text('No hay semanas registradas'),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("No hay semanas registradas"),
+                            const SizedBox(height: 16),
+                            _buildAddButton(context),
+                          ],
+                        ),
                       );
                     }
 
                     final list = snapshot.data!;
 
                     return ListView.builder(
-                      itemCount: list.length,
+                      itemCount: list.length + 1,
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         if (index == list.length) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Center(
-                              child: IconButton(
-                                icon: const Icon(Icons.add),
-                                color: Colors.white,
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                          );
+                          return _buildAddButton(context);
                         }
 
                         final semana = list[index];
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: _buildSemanaCard(
-                              semana: semana.fondSegSoc.toString(),
-                              diezmos: semana.diezOfre.toString(),
-                              manutencion: semana.manuPast.toString(),
-                              isr: semana.preDiez.toString()),
+                            semana: semana.fondSegSoc.toString(),
+                            diezmos: semana.diezOfre.toString(),
+                            manutencion: semana.manuPast.toString(),
+                            isr: semana.preDiez.toString(),
+                          ),
                         );
                       },
                     );
@@ -186,6 +184,30 @@ class MonthView extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAddButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Center(
+        child: IconButton(
+          icon: const Icon(Icons.add),
+          color: Colors.white,
+          style: IconButton.styleFrom(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.circular(8),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const WeekCalculator()),
+            );
+          },
+        ),
       ),
     );
   }
