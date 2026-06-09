@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:re_manu_past/logic/m_calculator.dart';
 import 'package:re_manu_past/models/m_week.dart';
-import 'package:intl/intl.dart';
+import 'package:re_manu_past/util/formatter.dart';
 
 class WeekCalculator extends StatefulWidget {
   const WeekCalculator({super.key});
@@ -11,9 +11,6 @@ class WeekCalculator extends StatefulWidget {
 }
 
 class _WeekCalculatorState extends State<WeekCalculator> {
-  final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'es_MX', symbol: '\$', decimalDigits: 2);
-  final NumberFormat _percentFormat = NumberFormat.percentPattern('es_MX',)..maximumFractionDigits = 2;
-
   bool _isCalculated = false;
   final MWeek _mw = MWeek();
 
@@ -162,9 +159,9 @@ class _WeekCalculatorState extends State<WeekCalculator> {
               ),
               Column(
                 children: [
-                  _buildDataRow('Diezmos y Ofrendas', _currencyFormat.format(_mw.diezOfre)),
-                  _buildDataRow('Ofrenda Escuela Biblica', _currencyFormat.format(_mw.ofreEsc)),
-                  _buildDataRow('Porcentaje de Manutencion', _percentFormat.format(_mw.porc)),
+                  _buildDataRow('Diezmos y Ofrendas', Formatter().getCurrencyFormat().format(_mw.diezOfre)),
+                  _buildDataRow('Ofrenda Escuela Biblica', Formatter().getCurrencyFormat().format(_mw.ofreEsc)),
+                  _buildDataRow('Porcentaje de Manutencion', Formatter().getPercenrtFormat().format(_mw.porc)),
                 ],
               ),
             ],
@@ -180,15 +177,15 @@ class _WeekCalculatorState extends State<WeekCalculator> {
           ),
           child: Column(
             children: [
-              _buildDataRow('3.5% Fondo Seguridad Social', _currencyFormat.format(_mw.fondSegSoc)),
-              _buildDataRow('Base para calculo', _currencyFormat.format(_mw.base)),
-              _buildDataRow('Manutencion antes del diezmo', _currencyFormat.format(_mw.preDiez)),
-              _buildDataRow('Diezmos del Pastor', _currencyFormat.format(_mw.diezPast)),
-              _buildDataRow('Manutencion Pastoral', _currencyFormat.format(_mw.manuPast)),
+              _buildDataRow('3.5% Fondo Seguridad Social', Formatter().getCurrencyFormat().format(_mw.fondSegSoc)),
+              _buildDataRow('Base para calculo', Formatter().getCurrencyFormat().format(_mw.base)),
+              _buildDataRow('Manutencion antes del diezmo', Formatter().getCurrencyFormat().format(_mw.preDiez)),
+              _buildDataRow('Diezmos del Pastor', Formatter().getCurrencyFormat().format(_mw.diezPast)),
+              _buildDataRow('Manutencion Pastoral', Formatter().getCurrencyFormat().format(_mw.manuPast)),
               _buildDataRow('Manutencion Pastoral Acumulada', ''),
-              _buildDataRow('ISR Provisional', _currencyFormat.format(_mw.isrPro)),
-              _buildDataRow('ISR Retenido en el mes', _currencyFormat.format(_mw.isrRM)),
-              _buildDataRow('ISR Retenido en la semana', _currencyFormat.format(_mw.isrRS)),
+              _buildDataRow('ISR Provisional', Formatter().getCurrencyFormat().format(_mw.isrPro)),
+              _buildDataRow('ISR Retenido en el mes', Formatter().getCurrencyFormat().format(_mw.isrRM)),
+              _buildDataRow('ISR Retenido en la semana', Formatter().getCurrencyFormat().format(_mw.isrRS)),
             ],
           ),
         ),
