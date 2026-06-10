@@ -12,6 +12,7 @@ class WeekCalculator extends StatefulWidget {
 
 class _WeekCalculatorState extends State<WeekCalculator> {
   bool _isCalculated = false;
+  bool _isLoading = false;
   final MWeek _mw = MWeek();
 
   final TextEditingController _diezmosController = TextEditingController();
@@ -22,10 +23,7 @@ class _WeekCalculatorState extends State<WeekCalculator> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -43,42 +41,55 @@ class _WeekCalculatorState extends State<WeekCalculator> {
               ),
               const SizedBox(height: 32),
 
-              if (!_isCalculated)
-                _buildInputForm()
-              else
-                _buildCalculatedView(),
+              if (!_isCalculated) _buildInputForm() else _buildCalculatedView(),
 
               const SizedBox(height: 40),
 
               if (!_isCalculated)
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      _mw.diezOfre = double.tryParse(_diezmosController.text) ?? 0.0;
-                      _mw.ofreEsc = double.tryParse(_ofrendaController.text) ?? 0.0;
-                      _mw.porc = ((double.tryParse(_porcentajeController.text) ?? 50) / 100);
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
 
-                      MCalculator(_mw).calculate();
+                            _mw.diezOfre = double.tryParse(_diezmosController.text) ?? 0.0;
+                            _mw.ofreEsc = double.tryParse(_ofrendaController.text) ?? 0.0;
+                            _mw.porc = ((double.tryParse(_porcentajeController.text) ?? 50) / 100);
 
-                      setState(() {
-                        _isCalculated = true;
-                      });
-                    },
+                            await MCalculator(_mw).calculate();
+
+                            setState(() {
+                              _isLoading = false;
+                              _isCalculated = true;
+                            });
+                          },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 16,
-                        ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)
-                        )
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                    child: const Text(
-                      'Calcular',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Calcular',
+                            style: TextStyle(fontSize: 16),
+                          ),
                   ),
                 )
               else
@@ -90,9 +101,7 @@ class _WeekCalculatorState extends State<WeekCalculator> {
                         _isCalculated = false;
                       });
                     }),
-                    _buildActionButton('Guardar', () {
-
-                    }),
+                    _buildActionButton('Guardar', () {}),
                   ],
                 ),
             ],
@@ -159,9 +168,18 @@ class _WeekCalculatorState extends State<WeekCalculator> {
               ),
               Column(
                 children: [
-                  _buildDataRow('Diezmos y Ofrendas', Formatter().getCurrencyFormat().format(_mw.diezOfre)),
-                  _buildDataRow('Ofrenda Escuela Biblica', Formatter().getCurrencyFormat().format(_mw.ofreEsc)),
-                  _buildDataRow('Porcentaje de Manutencion', Formatter().getPercenrtFormat().format(_mw.porc)),
+                  _buildDataRow(
+                    'Diezmos y Ofrendas',
+                    Formatter().getCurrencyFormat().format(_mw.diezOfre),
+                  ),
+                  _buildDataRow(
+                    'Ofrenda Escuela Biblica',
+                    Formatter().getCurrencyFormat().format(_mw.ofreEsc),
+                  ),
+                  _buildDataRow(
+                    'Porcentaje de Manutencion',
+                    Formatter().getPercenrtFormat().format(_mw.porc),
+                  ),
                 ],
               ),
             ],
@@ -177,15 +195,39 @@ class _WeekCalculatorState extends State<WeekCalculator> {
           ),
           child: Column(
             children: [
-              _buildDataRow('3.5% Fondo Seguridad Social', Formatter().getCurrencyFormat().format(_mw.fondSegSoc)),
-              _buildDataRow('Base para calculo', Formatter().getCurrencyFormat().format(_mw.base)),
-              _buildDataRow('Manutencion antes del diezmo', Formatter().getCurrencyFormat().format(_mw.preDiez)),
-              _buildDataRow('Diezmos del Pastor', Formatter().getCurrencyFormat().format(_mw.diezPast)),
-              _buildDataRow('Manutencion Pastoral', Formatter().getCurrencyFormat().format(_mw.manuPast)),
+              _buildDataRow(
+                '3.5% Fondo Seguridad Social',
+                Formatter().getCurrencyFormat().format(_mw.fondSegSoc),
+              ),
+              _buildDataRow(
+                'Base para calculo',
+                Formatter().getCurrencyFormat().format(_mw.base),
+              ),
+              _buildDataRow(
+                'Manutencion antes del diezmo',
+                Formatter().getCurrencyFormat().format(_mw.preDiez),
+              ),
+              _buildDataRow(
+                'Diezmos del Pastor',
+                Formatter().getCurrencyFormat().format(_mw.diezPast),
+              ),
+              _buildDataRow(
+                'Manutencion Pastoral',
+                Formatter().getCurrencyFormat().format(_mw.manuPast),
+              ),
               _buildDataRow('Manutencion Pastoral Acumulada', ''),
-              _buildDataRow('ISR Provisional', Formatter().getCurrencyFormat().format(_mw.isrPro)),
-              _buildDataRow('ISR Retenido en el mes', Formatter().getCurrencyFormat().format(_mw.isrRM)),
-              _buildDataRow('ISR Retenido en la semana', Formatter().getCurrencyFormat().format(_mw.isrRS)),
+              _buildDataRow(
+                'ISR Provisional',
+                Formatter().getCurrencyFormat().format(_mw.isrPro),
+              ),
+              _buildDataRow(
+                'ISR Retenido en el mes',
+                Formatter().getCurrencyFormat().format(_mw.isrRM),
+              ),
+              _buildDataRow(
+                'ISR Retenido en la semana',
+                Formatter().getCurrencyFormat().format(_mw.isrRS),
+              ),
             ],
           ),
         ),
@@ -273,10 +315,14 @@ class _WeekCalculatorState extends State<WeekCalculator> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: const TextStyle(fontSize: 14, color: Colors.black87)),
-          Text(value,
-              style: const TextStyle(fontSize: 14, color: Colors.black87)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
+          ),
         ],
       ),
     );
@@ -290,7 +336,8 @@ class _WeekCalculatorState extends State<WeekCalculator> {
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(8)),
+          borderRadius: BorderRadiusGeometry.circular(8),
+        ),
       ),
       child: Text(text, style: const TextStyle(fontSize: 16)),
     );
