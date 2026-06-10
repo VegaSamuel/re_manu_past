@@ -7,7 +7,10 @@
 .buildlog/
 .history
 
-
+# Firebase configuration files
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
 
 # Flutter repo-specific
 /bin/cache/
