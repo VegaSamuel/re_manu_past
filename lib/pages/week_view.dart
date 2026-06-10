@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:re_manu_past/logic/m_calculator.dart';
 import 'package:re_manu_past/models/m_week.dart';
+import 'package:re_manu_past/persistance/p_m_week.dart';
 import 'package:re_manu_past/util/formatter.dart';
 
 class WeekCalculator extends StatefulWidget {
@@ -21,6 +22,9 @@ class _WeekCalculatorState extends State<WeekCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    _mw.anio = DateTime.now().year;
+    _mw.mes = DateTime.now().month.toString();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
@@ -101,7 +105,10 @@ class _WeekCalculatorState extends State<WeekCalculator> {
                         _isCalculated = false;
                       });
                     }),
-                    _buildActionButton('Guardar', () {}),
+                    _buildActionButton('Guardar', () async {
+                      String id = await PMWeek().insertarSemana(_mw);
+                      print('Semana registrada con el ID: $id');
+                    }),
                   ],
                 ),
             ],

@@ -1,5 +1,7 @@
 class MMonth {
-  int uuid = 0;
+  String uuid = '';
+  String mes = '';
+  int anio = 0;
   double manuPastAcu = 0.0;
   double pagoPastor = 0.0;
   double ayuAdi = 0.0;
